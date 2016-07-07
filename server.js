@@ -3,23 +3,13 @@
  */
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 var port = process.env.PORT || 3000;
 
-var todos = [
-    {
-        description: 'Buy milk',
-        completed: false,
-        id: 1
-    },{
-        description: 'Lunch with mom',
-        completed: false,
-        id: 2
-    }, {
-        description: 'Learn NodeJS',
-        completed: true,
-        id: 3
-    }
-]
+app.use(bodyParser.json());
+
+var todos = [];
+var nextId = 1;
 
 app.get('/', function (req, res) {
    res.send('Express root');
@@ -42,6 +32,14 @@ app.get('/todos/:id', function (req, res) {
     if (flag === false) {
         res.status(404).send();
     }
+});
+
+app.post('/todos', function(req, res){
+    var body = req.body;
+    body.id = nextId++;
+    todos.push(body);
+
+    res.json(body);
 });
 
 app.listen(port, function (req, res) {
