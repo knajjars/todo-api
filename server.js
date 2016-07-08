@@ -18,7 +18,16 @@ app.get('/', function (req, res) {
 });
 
 app.get('/todos', function(req, res) {
-   res.send(todos);
+    var query = req.query;
+    var filteredTodos = todos;
+
+    if (query.hasOwnProperty('completed') && query.completed === 'true') {
+        filteredTodos = _.where(filteredTodos, {completed: true});
+    } else if(query.hasOwnProperty('completed') && query.completed === 'false') {
+        filteredTodos = _.where(filteredTodos, {completed: false});
+    }
+
+    res.json(filteredTodos);
 });
 
 app.get('/todos/:id', function (req, res) {
@@ -76,7 +85,6 @@ app.put('/todos/:id', function(req, res){
     } else if(body.hasOwnProperty('description')){
         return res.status(400).send();
     }
-
     _.extend(matchedTodo, validAttributes);
     res.json(matchedTodo);
 });
