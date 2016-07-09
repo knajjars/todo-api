@@ -1,2 +1,5 @@
 node_modules/
 .idea/workspace.xml
+data/dev-todo-api.sqlite
+playground/sql-example.js
+playground/sql-example.sqlite
