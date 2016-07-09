@@ -1,15 +1,15 @@
-module.exports = function(sequelize, dataTypes){
+module.exports = function(sequelize, DataTypes) {
     return sequelize.define('todo', {
         description: {
+            type: DataTypes.STRING,
             allowNull: false,
-            type: dataTypes.STRING,
             validate: {
-                len: [1,250]
+                len: [1, 250]
             }
         },
         completed: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
-            type: dataTypes.BOOLEAN,
             defaultValue: false
         }
     });
