@@ -31,7 +31,7 @@ app.get('/todos', function (req, res) {
         };
     }
     console.log(where);
-    db.todo.findAll({ where: where }).then(function (todos) {
+    db.todo.findAll({where: where}).then(function (todos) {
         res.json(todos);
     }, function (err) {
         res.status(500).send(err);
@@ -67,20 +67,27 @@ app.post('/todos', function (req, res) {
 });
 
 app.delete('/todos/:id', function (req, res) {
-    var todosIp = parseInt(req.params.id, 10);
-    var matchedTodo = _.findWhere(todos, { id: todosIp });
-    if (matchedTodo) {
-        todos = _.without(todos, matchedTodo);
-        res.json(matchedTodo);
-    } else {
-        res.status(404).json({ "error": "no id found" });
-    }
+    var todosId = parseInt(req.params.id, 10);
+    db.todo.findById(todosId).then(function (todo) {
+        if (todo) {
+            db.todo.destroy({
+                where: {
+                    id: todosId
+                }
+            });
+            res.status(204).send();
+        } else {
+            res.status(404).send();
+        }
+    }, function () {
+        res.status(500).send();
+    });
 });
 
 app.put('/todos/:id', function (req, res) {
     var body = _.pick(req.body, 'description', 'completed');
     var todosIp = parseInt(req.params.id, 10);
-    var matchedTodo = _.findWhere(todos, { id: todosIp });
+    var matchedTodo = _.findWhere(todos, {id: todosIp});
     var validAttributes = {};
 
     if (!matchedTodo) {
