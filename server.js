@@ -66,6 +66,16 @@ app.post('/todos', function (req, res) {
 
 });
 
+app.post('/user', function(req,res){
+    var body = _.pick(req.body, 'email', 'password');
+
+    db.user.create(body).then(function(user){
+        res.json(user.toJSON());
+    }, function (err){
+        res.status(400).json(err);
+    })
+});
+
 app.delete('/todos/:id', function (req, res) {
     var todosId = parseInt(req.params.id, 10);
     db.todo.findById(todosId).then(function (todo) {
